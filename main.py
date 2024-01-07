@@ -33,7 +33,9 @@ if __name__=="__main__":
 
 
     #Step5. Save processed file
+    print("Step5")
     file_name_parts = input_file_path.split('.')
     output_file_path = file_name_parts[0] + "_DrawArea.dxf"
     doc.saveas(output_file_path)
+    
 
