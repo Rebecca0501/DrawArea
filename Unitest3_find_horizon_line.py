@@ -15,10 +15,17 @@ class find_horizon_line():
         for i in range(self.point_num):
             if i < self.point_num-1:
                 if CLine(self.point[i],self.point[i+1]).is_horizon():
-                    horizon_line.append(CLine(self.point[i],self.point[i+1]))
+                    if self.point[i].x < self.point[i+1].x:
+                        horizon_line.append(CLine(self.point[i],self.point[i+1]))
+                    else:
+                        horizon_line.append(CLine(self.point[i+1],self.point[i]))
             else:
                 if CLine(self.point[i],self.point[0]).is_horizon():
-                    horizon_line.append(CLine(self.point[i],self.point[0]))
+                    if self.point[i].x < self.point[0].x:
+                        horizon_line.append(CLine(self.point[i],self.point[0]))
+                    else:
+                        horizon_line.append(CLine(self.point[0],self.point[i]))
+        
         
         return horizon_line
     
@@ -38,6 +45,9 @@ if __name__=="__main__":
     doc = ezdxf.readfile(input_file_path)
     msp = doc.modelspace()
 
+    #Step3. Create new layers
+    # "Horizon" for horizon line, the color is magenta
+    doc.layers.add(name="Horizon", color=6)
 
     #Step4. Process every polyline
     for LWPOLYLINE in msp.query():
@@ -62,6 +72,12 @@ if __name__=="__main__":
                     horizon_line.append(CLine(points[i],points[0]))
         
         for idx, h in enumerate(horizon_line):
-            print(f"horizon line {idx+1}=> p1:{h.p1}; p2:{h.p1}")
+            msp.add_line((h.p1.x,h.p1.y), (h.p2.x,h.p2.y), dxfattribs={"layer": "Horizon"})
+            #print(f"horizon line {idx+1}=> p1:{h.p1}; p2:{h.p1}")
 
         print(f"___________{LWPOLYLINE}___________")
+
+    #Step5. Save processed file
+    file_name_parts = input_file_path.split('.')
+    output_file_path = file_name_parts[0] + "_DrawArea.dxf"
+    doc.saveas(output_file_path)

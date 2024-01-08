@@ -34,10 +34,25 @@ class CSqure():
     def __init__(self, line1:CLine, line2:CLine):
         self.l1=line1
         self.l2=line2
+        self.p1 = line1.p1
+        self.p2 = line1.p2
+        self.p3 = line2.p2
+        self.p4 = line2.p1
+
+    def get_4_point(self):
+        squre_points = [(self.p1.x,self.p1.y),(self.p2.x,self.p2.y),(self.p3.x,self.p3.y),(self.p4.x,self.p4.y),(self.p1.x,self.p1.y)]
+        return squre_points
+    
+    def get_centor(self):
+        centor_x = (self.p1.x+self.p3.x)/2
+        centor_y = (self.p1.y+self.p3.y)/2
+        centor = CPoint(centor_x,centor_y)
+        return centor
+
 
 
 class CPointVector():
-    def __init__(self, p0:CPoint, p1:CPoint):
+    def __init__(self, p0=CPoint(0,0), p1=CPoint(1,1)):
         self.vx = p1.x-p0.x
         self.vy = p1.y-p0.y
 
